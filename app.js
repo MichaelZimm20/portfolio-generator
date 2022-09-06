@@ -1,4 +1,7 @@
 const inquirer = require('inquirer');
+const fs = require('fs');
+const generatePage = require('./src/page-template');
+
 
 
 const promptUser = () => {
@@ -54,7 +57,7 @@ const promptProject = portfolioData => {
         {
             type: 'input',
             name: 'link',
-            message: 'Enter the gthub link to your project. (Required)'
+            message: 'Enter the github link to your project. (Required)'
         },
         {
             type: 'confirm',
@@ -84,9 +87,17 @@ const promptProject = portfolioData => {
 
 promptUser()
     .then(promptProject)
-    .then(portfolioData => console.log(portfolioData));
+    .then(portfolioData => {
+        
 
+        const pageHTML = generatePage(portfolioData);
 
+        fs.writeFile('./index.html', pageHTML, err => {
+            if (err) throw new Error(err);
+
+        console.log('Page created! Check out index.html in this directory to see it!');
+        });
+    });
 
 
 
